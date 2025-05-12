@@ -1,0 +1,131 @@
+Inventory & POS System - Installation, Deployment, and Testing Instructions
+==========================================================================
+
+This document provides detailed step-by-step instructions for installing, deploying, and testing the Inventory & POS System on a Windows 11 machine. The application consists of a backend (Node.js + Express + Prisma) and a frontend (React.js with Tailwind CSS). The application will be accessed via Google Chrome (latest version).
+
+Prerequisites
+-------------
+1. Windows 11 PC with internet access.
+2. Google Chrome browser (latest version) installed.
+3. Basic familiarity with using Command Prompt (cmd) or PowerShell.
+
+Step 1: Install Node.js and npm
+-------------------------------
+1. Open your web browser and go to https://nodejs.org/
+2. Download the LTS (Long Term Support) version for Windows.
+3. Run the installer and follow the prompts to install Node.js and npm.
+4. To verify installation:
+   - Open Command Prompt (press Windows key, type "cmd", press Enter).
+   - Type `node -v` and press Enter. You should see the Node.js version.
+   - Type `npm -v` and press Enter. You should see the npm version.
+
+Step 2: Install PostgreSQL (Database)
+-------------------------------------
+1. Download PostgreSQL installer for Windows from https://www.postgresql.org/download/windows/
+2. Run the installer and follow the prompts.
+3. During installation, set a password for the "postgres" user and remember it.
+4. After installation, open "pgAdmin" or use the command line to create a new database for the application.
+   - Example database name: inventory_pos_db
+5. Note down the database connection string in the format:
+   `postgresql://username:password@localhost:5432/inventory_pos_db`
+   Replace `username`, `password`, and `inventory_pos_db` accordingly.
+
+Step 3: Setup Environment Variables
+-----------------------------------
+1. Create a file named `.env` in the root directory of the backend project (where `package.json` is located).
+2. Add the following lines to `.env` file:
+
+   ```
+   DATABASE_URL=your_postgresql_connection_string
+   JWT_SECRET=your_super_secure_jwt_secret
+   ```
+
+   Replace `your_postgresql_connection_string` with the connection string from Step 2.
+   Replace `your_super_secure_jwt_secret` with a strong secret string (e.g., a long random string).
+
+Step 4: Install Backend Dependencies
+------------------------------------
+1. Open Command Prompt and navigate to the backend directory:
+   ```
+   cd path\to\inventory-pos-system\app\backend
+   ```
+2. Run the following command to install dependencies:
+   ```
+   npm install --legacy-peer-deps
+   ```
+
+Step 5: Run Database Migrations
+-------------------------------
+1. Ensure PostgreSQL server is running.
+2. Run Prisma migrations to create database tables:
+   ```
+   npx prisma migrate deploy
+   ```
+3. Alternatively, if you want to generate Prisma client:
+   ```
+   npx prisma generate
+   ```
+
+Step 6: Start Backend Server
+----------------------------
+1. In the backend directory, run:
+   ```
+   node src/index.js
+   ```
+2. You should see a message: `Server is running on port 4000`
+
+Step 7: Install Frontend Dependencies
+-------------------------------------
+1. Open a new Command Prompt window.
+2. Navigate to the frontend directory:
+   ```
+   cd path\to\inventory-pos-system\app\frontend
+   ```
+3. Run the following command to install dependencies:
+   ```
+   npm install --legacy-peer-deps
+   ```
+
+Step 8: Start Frontend Development Server
+-----------------------------------------
+1. In the frontend directory, run:
+   ```
+   npm run dev
+   ```
+2. The frontend will start and be accessible at:
+   ```
+   http://localhost:3000
+   ```
+3. Open Google Chrome and navigate to the above URL.
+
+Step 9: Testing the Application
+-------------------------------
+1. Backend Tests:
+   - Open Command Prompt in backend directory.
+   - Run:
+     ```
+     npx jest --runInBand --forceExit
+     ```
+   - Tests will run and show results. Ensure all tests pass.
+2. Frontend Testing:
+   - Currently, no automated frontend tests are included.
+   - You can manually test by interacting with the UI in the browser.
+
+Step 10: Using the Application
+------------------------------
+1. Open http://localhost:3000 in Google Chrome.
+2. Use the login page to authenticate (use seeded or created user credentials).
+3. Navigate through inventory, transfer, waste, products, purchase orders, audit trails, and roles pages.
+4. Verify functionality as per your requirements.
+
+Additional Notes
+----------------
+- If you encounter errors related to environment variables, ensure `.env` file is correctly set and the backend server is restarted.
+- To stop servers, press `Ctrl + C` in the terminal window.
+- For production deployment, consider using services like Railway, Vercel, or Docker containers.
+
+Support
+-------
+If you face any issues during installation, deployment, or testing, please contact your system administrator or developer for assistance.
+
+End of Instructions
