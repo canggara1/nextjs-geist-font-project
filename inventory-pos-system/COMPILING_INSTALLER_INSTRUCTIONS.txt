@@ -1,0 +1,74 @@
+How to Compile the Inventory & POS System Installer Using Inno Setup Compiler
+=============================================================================
+
+This guide provides detailed step-by-step instructions to compile the Inno Setup script into a Windows installer executable. It is designed for users without programming experience.
+
+Prerequisites
+-------------
+1. A Windows PC (Windows 10 or 11 recommended).
+2. Internet connection to download software.
+3. The Inno Setup script file: `InnoSetupScriptComplete.iss` (provided in the project folder).
+
+Step 1: Download and Install Inno Setup Compiler
+------------------------------------------------
+1. Open your web browser and go to: https://jrsoftware.org/isdl.php
+2. Download the latest version of Inno Setup (e.g., "Inno Setup 6").
+3. Run the downloaded installer file.
+4. Follow the installation wizard steps:
+   - Accept the license agreement.
+   - Choose the installation folder (default is fine).
+   - Complete the installation.
+
+Step 2: Prepare the Project Files
+---------------------------------
+1. Ensure the entire Inventory & POS System project folder is organized as follows:
+   - `app/backend` folder with backend code.
+   - `app/frontend` folder with frontend code.
+   - `scripts` folder containing `backup_and_installer_setup.bat`.
+   - Batch files `start-backend.bat` and `start-frontend.bat` in the root folder.
+   - The Inno Setup script file `InnoSetupScriptComplete.iss` in the `installer` folder.
+
+2. Verify the relative paths in the Inno Setup script match your folder structure.
+
+Step 3: Open the Inno Setup Compiler
+------------------------------------
+1. Launch the Inno Setup Compiler from the Start Menu or desktop shortcut.
+2. In the Inno Setup Compiler window, click on "File" > "Open".
+3. Navigate to the `installer` folder inside your project directory.
+4. Select the file `InnoSetupScriptComplete.iss` and click "Open".
+
+Step 4: Compile the Installer
+-----------------------------
+1. After opening the script, click the "Compile" button (green arrow) on the toolbar or press `F9`.
+2. The compiler will start processing the script.
+3. Watch the "Messages" pane at the bottom for progress and errors.
+4. If there are errors, read the messages and fix any path or syntax issues in the script.
+5. If compilation succeeds, you will see "Compile successful" message.
+
+Step 5: Locate the Installer Executable
+---------------------------------------
+1. After successful compilation, the installer executable will be created in the `Output` folder inside the `installer` directory.
+2. The file will be named `InventoryPOSInstaller.exe` (or as specified in the script).
+3. You can copy this `.exe` file to any Windows machine for installation.
+
+Step 6: Run the Installer
+-------------------------
+1. Double-click the `InventoryPOSInstaller.exe` file.
+2. Follow the installation wizard prompts.
+3. When prompted, enter the required environment variables:
+   - `DATABASE_URL` (your PostgreSQL connection string).
+   - `JWT_SECRET` (a secure secret key).
+4. Complete the installation.
+5. Use the created shortcuts to start backend and frontend servers.
+
+Additional Tips
+---------------
+- Always test the installer on a clean Windows machine or virtual machine before distribution.
+- Keep the Inno Setup script updated if you change project structure.
+- Backup your project before making major changes.
+
+Support
+-------
+For any issues during compilation or installation, consult the Inno Setup documentation at https://jrsoftware.org/ishelp/ or contact your system administrator.
+
+End of Instructions
