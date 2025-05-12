@@ -1,0 +1,112 @@
+Inventory & POS System - Backup, Rollback, and Windows Installer Guide
+=====================================================================
+
+This document provides detailed instructions for creating backups of the backend and frontend codebases, performing rollback in case of errors, and creating an easy-to-use Windows installer for the application.
+
+-----------------------------------------------------------------------------------------------
+Part 1: Creating Backups of Backend and Frontend
+-----------------------------------------------------------------------------------------------
+
+1. Backup Purpose:
+   - To save the current stable state of the application.
+   - To enable restoration in case of errors or issues during development or deployment.
+
+2. Backup Procedure:
+   a) Manual Backup:
+      - Navigate to the root directory of the project (e.g., `inventory-pos-system`).
+      - Select the entire folder including all subfolders and files.
+      - Right-click and choose "Send to" > "Compressed (zipped) folder".
+      - Name the zip file with date and version info, e.g., `inventory-pos-backup-2024-06-01.zip`.
+      - Store the backup zip file in a safe location (external drive, cloud storage).
+
+   b) Automated Backup (Optional):
+      - Use backup software or scripts to automate zipping and storing the project folder regularly.
+
+3. Backup Database:
+   - Use pgAdmin or command line to export the PostgreSQL database.
+   - Command example:
+     ```
+     pg_dump -U your_db_user -F c -b -v -f "backup_file.backup" inventory_pos_db
+     ```
+   - Store database backups securely alongside code backups.
+
+-----------------------------------------------------------------------------------------------
+Part 2: Rollback Procedure
+-----------------------------------------------------------------------------------------------
+
+1. When to Rollback:
+   - If new code causes errors or instability.
+   - If deployment fails or critical bugs are found.
+
+2. Rollback Steps:
+   a) Stop running backend and frontend servers:
+      - In Command Prompt or PowerShell, press `Ctrl + C` in the terminal windows running the servers.
+
+   b) Restore Code:
+      - Delete or rename the current project folder.
+      - Extract the backup zip file to the desired location.
+
+   c) Restore Database:
+      - Use pgAdmin or command line to restore the database from backup.
+      - Command example:
+        ```
+        pg_restore -U your_db_user -d inventory_pos_db -v "backup_file.backup"
+        ```
+
+   d) Restart Servers:
+      - Follow installation instructions to start backend and frontend servers.
+
+-----------------------------------------------------------------------------------------------
+Part 3: Creating a Windows Installer for Easy Installation
+-----------------------------------------------------------------------------------------------
+
+1. Tool Recommendation:
+   - Use Inno Setup (https://jrsoftware.org/isinfo.php) for creating Windows installers.
+
+2. Installer Features:
+   - Copies backend and frontend folders to user-selected directory.
+   - Installs Node.js and PostgreSQL if not present or prompts user to install.
+   - Creates `.env` file with user input for environment variables.
+   - Provides shortcuts to start backend and frontend servers.
+   - Optionally includes Docker Desktop installation or prompts.
+
+3. Basic Inno Setup Script Example:
+   ```
+   [Setup]
+   AppName=InventoryPOS
+   AppVersion=1.0
+   DefaultDirName={pf}\InventoryPOS
+   DefaultGroupName=InventoryPOS
+   OutputBaseFilename=InventoryPOSInstaller
+   Compression=lzma
+   SolidCompression=yes
+
+   [Files]
+   Source: "app\backend\*"; DestDir: "{app}\backend"; Flags: recursesubdirs
+   Source: "app\frontend\*"; DestDir: "{app}\frontend"; Flags: recursesubdirs
+   Source: "start-backend.bat"; DestDir: "{app}"; Flags: ignoreversion
+   Source: "start-frontend.bat"; DestDir: "{app}"; Flags: ignoreversion
+
+   [Icons]
+   Name: "{group}\Start Backend Server"; Filename: "{app}\start-backend.bat"
+   Name: "{group}\Start Frontend Server"; Filename: "{app}\start-frontend.bat"
+   ```
+
+4. User Prompts:
+   - During installation, prompt user to enter:
+     - Database connection string
+     - JWT secret key
+
+5. Post-Installation:
+   - User can launch backend and frontend servers via desktop or start menu shortcuts.
+   - Provide a README file with usage instructions.
+
+-----------------------------------------------------------------------------------------------
+Support and Additional Notes
+-----------------------------------------------------------------------------------------------
+
+- Regularly create backups before making major changes.
+- Test installer on a clean Windows machine to ensure smooth installation.
+- Provide support contact info for users performing installation or rollback.
+
+End of Guide
