@@ -30,36 +30,6 @@ Name: "{userdesktop}\InventoryPOS Backend Server"; Filename: "{app}\start-backen
 Name: "{userdesktop}\InventoryPOS Frontend Server"; Filename: "{app}\start-frontend.bat"; Tasks: desktopicon
 
 [Code]
-var
-  DatabaseURL, JWTSecret: string;
-
-function InitializeSetup(): Boolean;
-begin
-  Result := True;
-  if not InputQuery('Environment Variables', 'Enter DATABASE_URL:', DatabaseURL) then
-  begin
-    MsgBox('DATABASE_URL is required. Setup will exit.', mbError, MB_OK);
-    Result := False;
-    Exit;
-  end;
-  if not InputQuery('Environment Variables', 'Enter JWT_SECRET:', JWTSecret) then
-  begin
-    MsgBox('JWT_SECRET is required. Setup will exit.', mbError, MB_OK);
-    Result := False;
-    Exit;
-  end;
-end;
-
-function InputQuery(const ACaption, APrompt: String; var Value: String): Boolean;
-var
-  Form: TInputQueryWizardPage;
-begin
-  Form := CreateInputQueryPage(ACaption, APrompt, '');
-  Result := Form.ShowModal = mrOk;
-  if Result then
-    Value := Form.Values[0];
-end;
-
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   EnvFile: string;
@@ -68,7 +38,10 @@ begin
   if CurStep = ssPostInstall then
   begin
     EnvFile := ExpandConstant('{app}\backend\.env');
-    EnvContent := 'DATABASE_URL=' + DatabaseURL + #13#10 + 'JWT_SECRET=' + JWTSecret + #13#10;
+    EnvContent := '; Please create this file manually with your environment variables' + #13#10 +
+                  '; Example:' + #13#10 +
+                  'DATABASE_URL=your_postgresql_connection_string' + #13#10 +
+                  'JWT_SECRET=your_jwt_secret_key' + #13#10;
     SaveStringToFile(EnvFile, EnvContent, False);
   end;
 end;
