@@ -50,6 +50,16 @@ begin
   end;
 end;
 
+function InputQuery(const ACaption, APrompt: String; var Value: String): Boolean;
+var
+  Form: TInputQueryWizardPage;
+begin
+  Form := CreateInputQueryPage(ACaption, APrompt, '');
+  Result := Form.ShowModal = mrOk;
+  if Result then
+    Value := Form.Values[0];
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   EnvFile: string;
